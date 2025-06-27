@@ -7,9 +7,9 @@ import { getWixSeverClient } from "@/lib/wix-client.server";
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const { slug } =  params;
+  const { slug } = await params;
   const wixClient = await getWixSeverClient();
   const product = await getProductbySlug(wixClient, slug);
 
@@ -35,10 +35,14 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
   const wixClient = await getWixSeverClient();
-  const product = await getProductbySlug(wixClient,slug);
+  const product = await getProductbySlug(wixClient, slug);
 
   if (!product?._id) notFound();
 
@@ -48,3 +52,5 @@ export default async function Page({ params }: { params: { slug: string } }) {
     </main>
   );
 }
+
+// Remove-Item -Recurse -Force .next

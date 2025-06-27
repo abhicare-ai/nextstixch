@@ -1,6 +1,5 @@
 import { products } from "@wix/stores";
 import Link from "next/link";
-import { media as wixMedia } from "@wix/sdk";
 import WixImage from "./WixImage";
 import Budge from "./ui/budge";
 import { formatCurrency } from "@/lib/utils";

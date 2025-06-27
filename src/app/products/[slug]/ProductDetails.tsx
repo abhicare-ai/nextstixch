@@ -1,7 +1,6 @@
 "use client";
 
 import Budge from "@/components/ui/budge";
-import WixImage from "@/components/WixImage";
 import { products } from "@wix/stores";
 import ProductOptions from "./ProductOptions";
 import { useState } from "react";

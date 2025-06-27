@@ -10,7 +10,9 @@ export const getWixSeverClient = cache(async () => {
   try {
     const cookieStore = await cookies();
     tokens = JSON.parse(cookieStore.get(WIX_SESSION_COOKIE)?.value || "{}");
-  } catch (error) {}
+  } catch (error) {
+    console.error(error)
+  }
 
   return getWixClient(tokens);
 });

@@ -5,8 +5,6 @@ import Link from "next/link";
 import React, { Suspense } from "react";
 import { ArrowRight } from "lucide-react";
 import banner from "@/assets/banner (1).jpg";
-import { delay } from "@/lib/utils";
-import { getWixClient } from "@/lib/wix-client.base";
 import Product from "@/components/Product";
 import { getCollectionBySlug } from "@/wix-api/collections";
 import { queryProducts } from "@/wix-api/products";

@@ -3,6 +3,6 @@ import cookies from "js-cookie";
 import { WIX_SESSION_COOKIE } from "./constant";
 import { getWixClient } from "./wix-client.base";
 
-let tokens: Tokens = JSON.parse(cookies.get(WIX_SESSION_COOKIE) || "{}");
+const tokens: Tokens = JSON.parse(cookies.get(WIX_SESSION_COOKIE) || "{}");
 
 export const wixBrawsorClient = getWixClient(tokens);

@@ -11,13 +11,15 @@ export async function delay(ms: number) {
 }
 
 export function formatCurrency(
-  price: Number | string = 0,
+  price: number | string = 0,
   currency: string = "INR",
 ) {
   return Intl.NumberFormat("en", { style: "currency", currency }).format(
     Number(price),
   );
 }
+
+
 
 export function findVariant(
   product: products.Product,

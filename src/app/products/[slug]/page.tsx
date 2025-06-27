@@ -9,7 +9,7 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug } =  params;
   const wixClient = await getWixSeverClient();
   const product = await getProductbySlug(wixClient, slug);
 
@@ -36,7 +36,7 @@ export async function generateMetadata({
 }
 
 export default async function Page({ params }: { params: { slug: string } }) {
-  const { slug } =await params;
+  const { slug } = params;
   const wixClient = await getWixSeverClient();
   const product = await getProductbySlug(wixClient,slug);
 

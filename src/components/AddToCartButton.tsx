@@ -1,10 +1,11 @@
-
 import { products } from "@wix/stores";
-import { Button } from "./ui/button";
-import { addToCart } from "@/wix-api/cart";
-import { wixBrawsorClient } from "@/lib/wix-client.brawosor";
+import LoadingButton from "./LoadingButton";
+import { useAddItemToCart } from "@/hooks/cart";
+import { cn } from "@/lib/utils";
+import { ShoppingCartIcon } from "lucide-react";
 
-interface AddToCartButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface AddToCartButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   product: products.Product;
   selectedOptions: Record<string, string>;
   quantity: number;
@@ -17,24 +18,17 @@ export default function AddToCartButton({
   className,
   ...props
 }: AddToCartButtonProps) {
+  const mutaion = useAddItemToCart();
 
   return (
-    <Button
-    className={className}
-      onClick={() =>
-       addToCart(
-        wixBrawsorClient,
-        {
-        product,
-        selectedOptions,
-        quantity
-       })
-      }
-      
+    <LoadingButton
+      onClick={() => mutaion.mutate({ product, selectedOptions, quantity })}
+      loading={mutaion.isPending}
+      className={cn("flex gap-3", className)}
       {...props}
     >
-    
+      <ShoppingCartIcon />
       Add to cart
-    </Button>
+    </LoadingButton>
   );
 }

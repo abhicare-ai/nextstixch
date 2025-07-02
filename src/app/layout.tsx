@@ -3,6 +3,9 @@ import { Lora } from "next/font/google";
 import "./globals.css";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
+import ReactQueryProvide from "./ReactQueryProvide";
+import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "next-themes";
 
 const lora = Lora({ subsets: ["latin"] });
 
@@ -21,11 +24,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={lora.className}>
-        <NavBar />
-        {children}
-        <Footer/>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem={true}
+          disableTransitionOnChange
+        >
+          <ReactQueryProvide>
+            <NavBar />
+            {children}
+            <Footer />
+          </ReactQueryProvide>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

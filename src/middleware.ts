@@ -1,6 +1,6 @@
 import { createClient, OAuthStrategy, Tokens } from "@wix/sdk";
-import { env } from "./env";
 import { NextRequest, NextResponse } from "next/server";
+import { env } from "./env";
 import { WIX_SESSION_COOKIE } from "./lib/constant";
 
 const wixClient = createClient({
@@ -11,17 +11,32 @@ export async function middleware(request: NextRequest) {
   const cookies = request.cookies;
   const sessionCookie = cookies.get(WIX_SESSION_COOKIE);
 
-  let sessionTokens = sessionCookie
-    ? (JSON.parse(sessionCookie.value) as Tokens)
-    : await wixClient.auth.generateVisitorTokens();
+  let sessionTokens: Tokens | undefined;
 
-  if (sessionTokens.accessToken.expiresAt < Math.floor(Date.now() / 1000)) {
+  if (sessionCookie) {
+    try {
+      sessionTokens = JSON.parse(sessionCookie.value) as Tokens;
+    } catch {
+      sessionTokens = undefined;
+    }
+  }
+
+  if (!sessionTokens) {
+    sessionTokens = await wixClient.auth.generateVisitorTokens();
+  }
+
+  // Check if accessToken and expiresAt exist
+  if (
+    !sessionTokens.accessToken ||
+    !sessionTokens.accessToken.expiresAt ||
+    sessionTokens.accessToken.expiresAt < Math.floor(Date.now() / 1000)
+  ) {
     try {
       sessionTokens = await wixClient.auth.renewToken(
         sessionTokens.refreshToken,
       );
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      console.error(error)
       sessionTokens = await wixClient.auth.generateVisitorTokens();
     }
   }
@@ -32,12 +47,11 @@ export async function middleware(request: NextRequest) {
 
   res.cookies.set(WIX_SESSION_COOKIE, JSON.stringify(sessionTokens), {
     maxAge: 60 * 60 * 24 * 14,
-    secure:process.env.NODE_ENV ==="production"
+    secure: process.env.NODE_ENV === "production",
   });
 
-  return res
+  return res;
 }
-
 
 export const config = {
   matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
